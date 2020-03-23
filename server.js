@@ -56,6 +56,9 @@ function start() {
     } else if (answer.toDo === "View All Roles") {
 			// View Role table
 			viewRoles();
+    } else if (answer.toDo === "Add Employee") {
+			// Add employee
+			addEmployee();
     }
     
     else if (answer.toDo === "Exit") {
@@ -94,4 +97,92 @@ function viewRoles() {
     // Once the role table is listed, then call start again to choose another option
     start();
   })
+}
+
+// Need to get the Role table titles only as a list for the choices for inquirer
+// When add an employee
+// function getRoleTitle(){
+//   connection.query('SELECT * FROM role', (err, roles) => {
+//     if(err) throw err;
+//     const roleTable = roles.map(role => role.title);
+//   // console.log(roleTable);
+//   })
+// }
+
+// Need to get the Employee table names only as a list for the choices for inquirer
+// When add a manager for an employee
+// function getEmployeeNames(){
+//   connection.query('SELECT * FROM employee', (err, employees) => {
+//     if(err) throw err;
+
+//     let employeeTable = employees.map(employee => employee.first_name + ` ` + employee.last_name);
+
+//     // ??????? Have to add None to the array
+//     //  employeeTable = employeeTable.push('None');
+//   console.log(employeeTable);
+//   })
+// }
+
+
+// Add Employee
+// Need to get the role and manager list before can start inquirer
+function addEmployee() {
+
+// connection to get the role titles from the role table
+  connection.query('SELECT * FROM role', (err, roles) => {
+    if(err) throw err;
+    const roleTable = roles.map(role => role.title);
+ 
+
+// connection to get the employee names as a selection list for the manager
+      connection.query('SELECT * FROM employee', (err, employees) => {
+        if(err) throw err;
+    
+        let employeeTable = employees.map(employee => employee.first_name + ` ` + employee.last_name);
+
+
+ inquirer.prompt([
+		{
+			name: "firstName",
+			type: "input",
+			message: "What is the first name of the employee?"
+		},
+		{
+			name: "lastName",
+			type: "input",
+			message: "What is the last name of the employee?"
+    },
+    {
+			name: "role",
+      type: "list",
+      choices: roleTable,
+      message: "What is the employee's role?"
+   
+    },
+    {
+			name: "manager",
+			type: "list",
+      message: "Who is the employee's manager?",
+      choices: employeeTable
+		}
+
+	]).then(answer => {
+
+		connection.query("INSERT INTO employee SET ?", 
+		{
+			first_name: answer.firstName,
+      last_name: answer.lastName,
+      
+      // ??????  need to do a join to figure out what role_id and manager_id to put in to the employee table
+// 			role_id: answer.role,
+// 			manager_id: answer.maanger
+		}, (err) => {
+			if(err) throw err;
+      console.log("Successfully entered your employee");
+      viewEmployees();
+			start();
+		});
+	})
+})
+})
 }
