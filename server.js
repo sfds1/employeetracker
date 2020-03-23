@@ -29,16 +29,17 @@ var connection = mysql.createConnection({
 function start() {
 	inquirer.prompt({
 		name: 'toDo',
-		type: 'list',
+		type: 'rawlist',
 		message: "What would you like to do?",
         choices: [ "View All Employees",
+        "Exit",
                     "View All Departments",
                     "View All Roles",
                     "Add Employee",
                     "Add Department",
                     "Add Role",
-                    "Update Employee Role",
-                    "Exit"
+                    "Update Employee Role"
+
                     // "View All Employees By Department",
                     // "View All Employee By Manager",
                     // "Remove Employee",
@@ -49,18 +50,48 @@ function start() {
 		if(answer.toDo === "View All Employees") {
 			// View Employee table
 			viewEmployees();
-		} else if (answer.toDo === "Exit") {
+    } else if (answer.toDo === "View All Departments") {
+			// View Department table
+			viewDepartments();
+    } else if (answer.toDo === "View All Roles") {
+			// View Role table
+			viewRoles();
+    }
+    
+    else if (answer.toDo === "Exit") {
 			// End connection to exit
 			connection.end();
-		}
-	});
+    }
+  });
+
 }
 
+// Show Employee Table
 function viewEmployees() {
 	connection.query('SELECT * FROM employee', (err, employees) => {
 		if(err) throw err;
-		console.table(employees);
+    console.table(`Employee Listing:`, employees);
+    // Once the employee table is listed, then call start again to choose another option
+    start();
   })
-  start();
 }
 
+// Show Department Table
+function viewDepartments() {
+	connection.query('SELECT * FROM department', (err, department) => {
+		if(err) throw err;
+    console.table(`Department Listing:`, department);
+    // Once the department table is listed, then call start again to choose another option
+    start();
+  })
+}
+
+// Show Role Table
+function viewRoles() {
+	connection.query('SELECT * FROM role', (err, role) => {
+		if(err) throw err;
+    console.table(`Role Listing:`, role);
+    // Once the role table is listed, then call start again to choose another option
+    start();
+  })
+}
