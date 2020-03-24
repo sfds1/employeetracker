@@ -31,10 +31,11 @@ function start() {
 		name: 'toDo',
 		type: 'rawlist',
 		message: "What would you like to do?",
-        choices: [ "View All Employees",
+        choices: [ 
+          // "View All Employees",
         "Exit",
-                    "View All Departments",
-                    "View All Roles",
+                    // "View All Departments",
+                    // "View All Roles",
                     "Add Employee",
                     "Add Department",
                     "Add Role",
@@ -59,7 +60,14 @@ function start() {
     } else if (answer.toDo === "Add Employee") {
 			// Add employee
 			addEmployee();
+    } else if (answer.toDo === "Add Department") {
+			// Add department
+			addDepartment();
+    } else if (answer.toDo === "Add Role") {
+			// Add role
+			addRole();
     }
+    
     
     else if (answer.toDo === "Exit") {
 			// End connection to exit
@@ -180,9 +188,72 @@ function addEmployee() {
 			if(err) throw err;
       console.log("Successfully entered your employee");
       viewEmployees();
-			start();
 		});
 	})
 })
 })
+}
+
+// Add New Department
+function addDepartment(){
+  inquirer.prompt([
+		{
+			name: "newDept",
+			type: "input",
+			message: "What is the department you want to add?"
+    }
+  ]).then(answer => {
+
+		connection.query("INSERT INTO department SET ?", 
+		{
+			name: answer.newDept
+      
+		}, (err) => {
+			if(err) throw err;
+      console.log("Successfully entered department");
+      viewDepartments();
+		});
+	})
+
+}
+
+// Add New Role
+function addRole(){
+
+  connection.query('SELECT * FROM department', (err, newDept) => {
+    if(err) throw err;
+    const deptTable = newDept.map(dept => dept.name);
+
+  inquirer.prompt([
+		{
+			name: "newRole",
+			type: "input",
+			message: "What is the role you want to add?"
+    },
+    {
+			name: "salary",
+			type: "input",
+			message: "What is the salary for this role?"
+    },
+    {
+			name: "dept",
+      type: "list",
+      choices: deptTable,
+      message: "What is the role's department?"
+
+    }
+
+  ]).then(answer => {
+
+		connection.query("INSERT INTO role SET ?", 
+		{
+			title: answer.newRole,
+      salary: answer.salary
+		}, (err) => {
+			if(err) throw err;
+      console.log("Successfully entered role");
+      viewRoles();
+		});
+	});
+  });
 }
