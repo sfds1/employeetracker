@@ -16,11 +16,11 @@ function start() {
          "Add Department",
          "Add Role",
          "Update Employee Role",
-         "View All Employees By Department",
-         "View All Employee By Manager",
-         "Remove Employee",
-         "Update Employee Manager",
-         "Remove Role",
+         // "View All Employees By Department",
+         // "View All Employee By Manager",
+         // "Remove Employee",
+         // "Update Employee Manager",
+         // "Remove Role",
          "Exit"
       ]
    }).then(answer => {
@@ -43,23 +43,20 @@ function start() {
             // Add employee
             addEmployee();
             break;
-
-         // } else if (answer.toDo === "Add Employee") {
-         //    // Add employee
-         //    addEmployee();
-         // } else if (answer.toDo === "Add Department") {
-         //    // Add department
-         //    addDepartment();
-         // } else if (answer.toDo === "Add Role") {
-         //    // Add role
-         //    addRole();
-         // }
-
-
-         // else if (answer.toDo === "Exit") {
-         //    // End connection to exit
-         //    connection.end();
-         // }
+         case "Add Department":
+            // Add department
+            addDepartment();
+            break;
+         case "Add Role":
+            // Add role
+            addRole();
+            break;
+         case "Update Employee Role":
+            // Update employee role
+            updateRole();
+            break;
+         case "Exit":
+            connection.end();
       }
 
    });
@@ -94,56 +91,62 @@ async function viewRoles() {
 
 }
 
-// async function addEmployee() {
+async function addEmployee() {
 
-//    const roles = await dbcalls.viewroles()
-//    const roleTable = roles.map((role) => ({ name: role.title, value: role.id }));
+   // Creates a role table to choose the role
+   const roles = await dbcalls.viewrole()
+   console.log(roles);
+   const roleTable = roles.map(({ id, role }) => ({ name: role.title, value: role.id }));
 
-//    const employees = await dbcalls.viewemp()
-//    let employeeTable = employees.map((employee) => ({ name: employee.first_name + ` ` + employee.last_name, value: employee.id }));
+   console.log(roleTable);
+   // Creating the employee list by concatenating the names to choose the manager
+   const employees = await dbcalls.viewemp()
+   let employeeTable = employees.map((employee) => ({ name: employee.first_name + ` ` + employee.last_name, value: employee.id }));
+   // adding "No Manager" as an option to the Manager list
+   employeeTable.push([{ name: "No Manager", value: null }])
+   console.log(employeeTable);
 
-//    employeeTable.push([{ name: "No Manager", value: null }])
-//    console.log(employeeTable)
+   // const answer = await askEmp()
+   // inquirer.prompt([
+   //    {
+   //       name: "first_name",
+   //       type: "input",
+   //       message: "What is the first name of the employee?"
+   //    },
+   //    {
+   //       name: "last_name",
+   //       type: "input",
+   //       message: "What is the last name of the employee?"
+   //    },
+   //    {
+   //       name: "role_id",
+   //       type: "list",
+   //       choices: roleTable,
+   //       message: "What is the employee's role?"
 
-//    const answer = await askEmp()
-//    inquirer.prompt([
-//       {
-//          name: "first_name",
-//          type: "input",
-//          message: "What is the first name of the employee?"
-//       },
-//       {
-//          name: "last_name",
-//          type: "input",
-//          message: "What is the last name of the employee?"
-//       },
-//       {
-//          name: "role_id",
-//          type: "list",
-//          choices: roleTable,
-//          message: "What is the employee's role?"
+   //    },
+   //    {
+   //       name: "manager_id",
+   //       type: "list",
+   //       message: "Who is the employee's manager?",
+   //       choices: employeeTable
+   //    }
 
-//       },
-//       {
-//          name: "manager_id",
-//          type: "list",
-//          message: "Who is the employee's manager?",
-//          choices: employeeTable
-//       }
-
-//    ]).then(answer => {
-//       console.log(answer);
-//       await dbcalls.addEmployee(answer);
-//       console.log("I am back")
-//       start()
-//    })
+   // ]).then(answer => {
+   //    console.log(answer);
+   //    await dbcalls.addEmployee(answer);
+   //    console.log("I am back")
+   //    start()
+   // })
 
 
-//    async function askEmp() {
-//       return inquirer.prompt
-//    }
+   async function askEmp() {
+      return inquirer.prompt
 
-//    // Once the employee table is listed, then call start again to choose another option
-//    start();
 
-// }
+   }
+
+   // Once the employee table is listed, then call start again to choose another option
+   start();
+
+}
