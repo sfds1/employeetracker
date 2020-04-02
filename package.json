@@ -17,7 +17,8 @@
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^6.5.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "npm": "^6.9.0"
   },
   "bugs": {
     "url": "https://github.com/sfds1/employeetracker/issues"
