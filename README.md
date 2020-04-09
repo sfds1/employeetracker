@@ -54,4 +54,4 @@ This time around I asked my tutor as I didn't have time to research other ways
 
 ## Live app, not code
 
-![](images/Employee_Tracker_Video.mov)
+![](images/EmployeeTracker.gif)
